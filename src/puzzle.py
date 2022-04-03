@@ -1,4 +1,5 @@
 from pohon import TreeNode
+import heapq
 
 def readFile(fileName): #Membaca file dan mengubahnya menjadi matrix 15-puzzle
     puzzle = []
@@ -140,21 +141,11 @@ def movePuzzle(puzzleOG, direction): #Menggerakan ubin kosong pada puzzle sesuai
     return puzzle
 
 def checkGoal(node): #Memeriksa apakah puzzle sudah sesuai dengan goal
-    if node.cost - node.distance == 0:
+    solution = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]
+    if node.puzzle == solution:
         return True
     else:
         return False
-
-def addSimpul(simpulHidup, node): #Menambahkan simpul hidup dengan basis prioQueue
-    if len(simpulHidup) != 0:
-        index = len(simpulHidup)
-        for i in range(len(simpulHidup)):
-            if simpulHidup[i].cost > node.cost:
-                index = i
-                break
-        simpulHidup.insert(index,node)
-    else:
-        simpulHidup.append(node)
 
 def printSolution(root, goal): #mencetak path dari solusi 15-puzzle
     print("Initial:")
@@ -175,20 +166,39 @@ def checkAccessed(accessed, puzzle): #Periksa apakah suatu state dari puzzle sud
         return True
     return False
 
+def getNode(createdNode, IDSearch): #Mendapatkan index node dengan ID tertentu
+    bawah = 0
+    tengah = 0
+    atas = len(createdNode)-1
+
+    while bawah <= atas:
+        tengah = (bawah+atas)//2
+        if createdNode[tengah].id < IDSearch:
+            bawah = tengah+1
+        elif createdNode[tengah].id > IDSearch:
+            atas = tengah-1
+        else:
+            return tengah
+
 def findSolution(puzzle): #mencari solusi dari 15-puzzle
-    simpulHidup = []
+    simpulHidup= []
     accessed = []
+    createdNode = []
     found = False
     gerakan = ["up", "right", "down", "left"]
     root = TreeNode("root", puzzle, 0, 0, [])
-    simpulHidup.append(root)
+    info = (root.cost,root.id)
+    heapq.heappush(simpulHidup, info)
     accessed.append(root.puzzle)
+    createdNode.append(root)
     if checkGoal(root):
         found = True
         solution = root
 
     while (len(simpulHidup) != 0 and not found):
-        currentNode = simpulHidup.pop(0)
+        newSimpul = heapq.heappop(simpulHidup)
+        nodeIndex = getNode(createdNode, newSimpul[1])
+        currentNode = createdNode[nodeIndex]
         newDis = currentNode.distance+1
         for item in gerakan:
             newPath = currentNode.path.copy()
@@ -196,10 +206,12 @@ def findSolution(puzzle): #mencari solusi dari 15-puzzle
                 newPuzzle = movePuzzle(currentNode.puzzle,item)
                 if not checkAccessed(accessed, newPuzzle):
                     newPath.append(item)
-                    accessed.append(newPuzzle)
                     child = TreeNode(item, newPuzzle, newDis, getCost(newPuzzle), newPath)
                     currentNode.addChild(child)
-                    addSimpul(simpulHidup,child)
+                    info = (child.cost,child.id)
+                    heapq.heappush(simpulHidup, info)
+                    accessed.append(newPuzzle)
+                    createdNode.append(child)
                     
                     if checkGoal(child):
                         found = True
