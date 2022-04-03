@@ -1,12 +1,9 @@
 from puzzle import *
 from pohon import *
 import time
-import os
 
 fileName = input("Masukkan nama file: ")
-cwd = os.getcwd()
-print(cwd)
-puzzle = readFile(".\\testcase\\" + fileName)
+puzzle = readFile("testcase/" + fileName)
 
 # Nomor 1
 print("Matrix awal: ")
@@ -50,4 +47,3 @@ if X % 2 == 0:
 else:
     print("Jumlah simpul yang dibangkitkan: 0" )
     print("\n")
-    
