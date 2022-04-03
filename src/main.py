@@ -47,4 +47,3 @@ if X % 2 == 0:
 else:
     print("Jumlah simpul yang dibangkitkan: 0" )
     print("\n")
-    
