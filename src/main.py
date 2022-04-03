@@ -6,7 +6,7 @@ import os
 fileName = input("Masukkan nama file: ")
 cwd = os.getcwd()
 print(cwd)
-puzzle = readFile(cwd + "\\src\\testcase\\" + fileName)
+puzzle = readFile(".\\testcase\\" + fileName)
 
 # Nomor 1
 print("Matrix awal: ")

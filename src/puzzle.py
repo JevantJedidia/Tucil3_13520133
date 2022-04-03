@@ -183,9 +183,11 @@ def findSolution(puzzle): #mencari solusi dari 15-puzzle
     root = TreeNode("root", puzzle, 0, 0, [])
     simpulHidup.append(root)
     accessed.append(root.puzzle)
+    if checkGoal(root):
+        found = True
+        solution = root
 
     while (len(simpulHidup) != 0 and not found):
-        print(TreeNode.id)
         currentNode = simpulHidup.pop(0)
         newDis = currentNode.distance+1
         for item in gerakan:
