@@ -180,10 +180,8 @@ def findSolution(puzzle): #mencari solusi dari 15-puzzle
     found = False
     gerakan = ["up", "right", "down", "left"]
     root = TreeNode("root", puzzle, 0, 0, [])
-    info = (root.cost,root.id, root)
-    bisect.insort_right(simpulHidup, info)
-    a = tuple(changeTo1D(root.puzzle))
-    accessed.add(a)
+    bisect.insort_right(simpulHidup, (root.cost,root.id,root))
+    accessed.add(tuple(changeTo1D(root.puzzle)))
 
     if checkGoal(root):
         found = True
@@ -200,10 +198,8 @@ def findSolution(puzzle): #mencari solusi dari 15-puzzle
                     newPath.append(item)
                     child = TreeNode(item, newPuzzle, newDis, getCost(newPuzzle), newPath)
                     currentNode.addChild(child)
-                    info = (child.cost,child.id, child)
-                    bisect.insort_right(simpulHidup, info)
-                    a = tuple(changeTo1D(child.puzzle))
-                    accessed.add(a)
+                    bisect.insort_right(simpulHidup, (child.cost,child.id, child))
+                    accessed.add(tuple(changeTo1D(child.puzzle)))
                     
                     if checkGoal(child):
                         found = True
